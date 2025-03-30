@@ -4,7 +4,11 @@ pragma solidity ^0.8.10;
 import "./Utils.sol";
 
 library UniswapLibrary {
-    function pairSaltAndBytecode(address impl, address token0, address token1) public pure returns (bytes32 salt, bytes memory bytecode) {
+    function pairSaltAndBytecode(address impl, address token0, address token1)
+        public
+        pure
+        returns (bytes32 salt, bytes memory bytecode)
+    {
         salt = keccak256(abi.encode(token0, token1));
         bytes20 _impl = bytes20(impl);
         bytes20 _token0 = bytes20(token0);

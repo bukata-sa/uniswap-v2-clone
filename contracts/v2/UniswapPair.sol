@@ -12,7 +12,7 @@ contract UniswapPair is IUniswapPair, ERC20 {
     using SafeTransferLib for address;
     using UQ128x128 for uint256;
 
-    uint16 private constant MINIMUM_LIQUIDITY = 10**3;
+    uint16 private constant MINIMUM_LIQUIDITY = 10 ** 3;
 
     address private immutable i_feeReceiver;
 
@@ -65,7 +65,9 @@ contract UniswapPair is IUniswapPair, ERC20 {
         // mint fee before accounting new liquidity
         mintFee(lpSupply, _r0, _r1);
         if (lpSupply == 0) {
-            require(Math.sqrt(amount0 * amount1) > MINIMUM_LIQUIDITY, "not enough liqidity provided during the initial call");
+            require(
+                Math.sqrt(amount0 * amount1) > MINIMUM_LIQUIDITY, "not enough liqidity provided during the initial call"
+            );
             _mint(address(this), MINIMUM_LIQUIDITY);
             liquidity = Math.sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY;
         } else {
@@ -90,15 +92,18 @@ contract UniswapPair is IUniswapPair, ERC20 {
         amount0 = liquidity * _r0 / lpSupply;
         amount1 = liquidity * _r1 / lpSupply;
         _burn(msg.sender, liquidity);
-        token0.safeTransfer(msg.sender,  amount0);
-        token1.safeTransfer(msg.sender,  amount1);
+        token0.safeTransfer(msg.sender, amount0);
+        token1.safeTransfer(msg.sender, amount1);
         s_reserves0 = _r0 - amount0;
         s_reserves1 = _r1 - amount1;
         if (i_feeReceiver != address(0)) s_kLast = s_reserves0 * s_reserves1;
         return (amount0, amount1);
     }
 
-    function swap(uint256 amount0In, uint256 amount1In, uint256 amount0OutMin, uint256 amount1OutMin) external returns (uint256 amount0Out, uint256 amount1Out) {
+    function swap(uint256 amount0In, uint256 amount1In, uint256 amount0OutMin, uint256 amount1OutMin)
+        external
+        returns (uint256 amount0Out, uint256 amount1Out)
+    {
         require(amount0In > 0 && amount1In == 0 || amount0In == 0 && amount1In > 0, "one and only one amount must be 0");
         (address token0, address token1) = tokens();
         (uint256 _r0, uint256 _r1) = _reserves();
@@ -125,7 +130,8 @@ contract UniswapPair is IUniswapPair, ERC20 {
         uint256 rootK = Math.sqrt(_r0 * _r1);
         uint256 rootKLast = Math.sqrt(s_kLast);
         require(rootK >= rootKLast, "invariant rootK >= rootKLast violated");
-        if (lpSupply > 0 && rootK > rootKLast) { // fee can't be zero
+        if (lpSupply > 0 && rootK > rootKLast) {
+            // fee can't be zero
             fee = lpSupply * (rootK - rootKLast) / (5 * rootK + rootKLast);
             _mint(i_feeReceiver, fee);
             return fee;

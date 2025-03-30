@@ -21,11 +21,7 @@ contract UniswapFactoryTest is Test {
         (, bytes memory bytecode) = UniswapLibrary.pairSaltAndBytecode(impl, token0, token1);
         assertEq(
             abi.encodePacked(
-                hex"3d605f80600a3d3981f3363d3d373d3d3d363d73",
-                impl,
-                hex"5af43d82803e903d91602b57fd5bf3",
-                token0,
-                token1
+                hex"3d605f80600a3d3981f3363d3d373d3d3d363d73", impl, hex"5af43d82803e903d91602b57fd5bf3", token0, token1
             ),
             bytecode
         );

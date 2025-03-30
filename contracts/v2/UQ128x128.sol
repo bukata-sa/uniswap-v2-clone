@@ -6,7 +6,7 @@ pragma solidity >=0.8.0;
 // resolution: 1 / 2**128
 
 library UQ128x128 {
-    uint256 public constant Q128 = 2**128;
+    uint256 public constant Q128 = 2 ** 128;
 
     // encode a uint128 as a UQ128x128
     function encode(uint128 y) internal pure returns (uint256 z) {
